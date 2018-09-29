@@ -4,6 +4,7 @@
 
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 namespace Daniel.Tiles {
 	public class GameManager : MonoBehaviour {
@@ -16,8 +17,13 @@ namespace Daniel.Tiles {
         [SerializeField] private Tile usableSpace = null;
         [SerializeField] private Tile unusableSpace = null;
 
+        [Header("Time")]
+        [SerializeField] private float dayLength = 0;
+        [SerializeField] private Image clockFill = null;
+
         [Header("Readonly")]
         [SerializeField] [ReadOnly] private int borrowedSpace = 0;
+        [SerializeField] [ReadOnly] private float dayPassed = 0;
 
         #endregion
 
@@ -31,6 +37,13 @@ namespace Daniel.Tiles {
         private void Update() {
             if (Input.GetMouseButtonDown(0)) {
                 BorrowFromHeap();
+            }
+
+            dayPassed += Time.deltaTime;
+            clockFill.fillAmount = dayPassed / dayLength;
+
+            //end of day
+            if (dayPassed >= dayLength) {
             }
         }
 
