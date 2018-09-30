@@ -89,7 +89,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -665,7 +665,6 @@ MonoBehaviour:
   annoucer: {fileID: 169023684}
   initialCapital: 1000
   capitalText: {fileID: 1127545103}
-  costPerSpacePerSecond: 1
   kickPenalty: 10
   starBarFill: {fileID: 159537126}
   successRating: 0.1
@@ -677,20 +676,23 @@ MonoBehaviour:
   - {fileID: 980852131}
   dummy: 0
   events:
-  - {fileID: 11400000, guid: 75ee5954145b677478e0f61edc0e4ac9, type: 2}
-  - {fileID: 11400000, guid: 04f255b78c9a3cc44ae3c3da20dec409, type: 2}
+  - {fileID: 11400000, guid: ef124f3cde464e44e8b7b9ef97614351, type: 2}
+  - {fileID: 11400000, guid: 8395af2080a543e44b414015fbf66f53, type: 2}
+  - {fileID: 11400000, guid: e66b0254c9b42c946b3a498d891d6105, type: 2}
   borrowedSpace: 0
   firstUnusablePosition: {x: -4, y: 3, z: 0}
-  dayPassed: 0
+  dayPassed: 30
   capital: 1000
   star: 5
   isReallocing: 0
-  operational: 0
-  currentEvent: {fileID: 11400000, guid: 75ee5954145b677478e0f61edc0e4ac9, type: 2}
+  operational: 1
+  started: 0
+  currentEvent: {fileID: 11400000, guid: ef124f3cde464e44e8b7b9ef97614351, type: 2}
   timeBetweenNewcomerRange: {x: 0, y: 3}
   patientRange: {x: 8, y: 12}
-  spendingRange: {x: 40, y: 60}
+  spendingRange: {x: 20, y: 30}
   stayTimeRange: {x: 8, y: 12}
+  costPerSpacePerSecond: 1
 --- !u!4 &235860151
 Transform:
   m_ObjectHideFlags: 0
@@ -740,7 +742,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 70, y: 70}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &378012055
 MonoBehaviour:
@@ -761,7 +763,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: cf5982f62ffe3884aadbd8801d95970d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c4c36e7ef17343f4f81e2237f506c07c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -812,7 +814,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 70, y: 70}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &495717247
 MonoBehaviour:
@@ -833,7 +835,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: cf5982f62ffe3884aadbd8801d95970d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c4c36e7ef17343f4f81e2237f506c07c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1193,7 +1195,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 70, y: 70}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &980852131
 MonoBehaviour:
@@ -1214,7 +1216,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: cf5982f62ffe3884aadbd8801d95970d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c4c36e7ef17343f4f81e2237f506c07c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2361,8 +2363,8 @@ Tilemap:
       m_ColliderType: 1
   - first: {x: -4, y: 4, z: 0}
     second:
-      m_TileIndex: 1
-      m_TileSpriteIndex: 1
+      m_TileIndex: 2
+      m_TileSpriteIndex: 2
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_ObjectToInstantiate: {fileID: 0}
@@ -2444,13 +2446,17 @@ Tilemap:
   m_TileAssetArray:
   - m_RefCount: 64
     m_Data: {fileID: 11400000, guid: eed2e0d66e97b9e4d95c471228258a5d, type: 2}
-  - m_RefCount: 36
+  - m_RefCount: 35
     m_Data: {fileID: 11400000, guid: 755fcbcae4cf31944979532a9d026358, type: 2}
+  - m_RefCount: 1
+    m_Data: {fileID: 11400000, guid: fa9a18f9be6618842925544f144fa8ba, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 64
     m_Data: {fileID: 21300002, guid: ffec87fec69108e4fbdf1b09137db077, type: 3}
-  - m_RefCount: 36
+  - m_RefCount: 35
     m_Data: {fileID: 21300004, guid: ffec87fec69108e4fbdf1b09137db077, type: 3}
+  - m_RefCount: 1
+    m_Data: {fileID: 21300008, guid: ffec87fec69108e4fbdf1b09137db077, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 100
     m_Data:
@@ -3148,8 +3154,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 50, y: 150}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 50, y: 50}
+  m_SizeDelta: {x: 100, y: 250}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1788621591
 MonoBehaviour:

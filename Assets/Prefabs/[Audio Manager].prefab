@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1482712297559736
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4390616995991590}
+  - component: {fileID: 114086374501021308}
+  m_Layer: 0
+  m_Name: '[Audio Manager]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4390616995991590
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482712297559736}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114086374501021308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482712297559736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8766a5fcfe3efdc42ad7f0adbc5d3d9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoPlayFirst: 1
+  sounds:
+  - name: Theme
+    clip: {fileID: 8300000, guid: a32901d7e26956c4da89ba8b6027f58c, type: 3}
+    mixer: {fileID: 24300002, guid: a4b735326df1c5f468912c14689ec53e, type: 2}
+    volume: 0.2
+    pitch: 1
+    source: {fileID: 0}
+    loop: 1
+  - name: Cash
+    clip: {fileID: 8300000, guid: 721d13f72366af14aa2d5365cf32cc21, type: 3}
+    mixer: {fileID: 24300002, guid: a4b735326df1c5f468912c14689ec53e, type: 2}
+    volume: 0.5
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: Lose
+    clip: {fileID: 8300000, guid: dc9850c406fe02946adfd6feea05b2b4, type: 3}
+    mixer: {fileID: 24300002, guid: a4b735326df1c5f468912c14689ec53e, type: 2}
+    volume: 0.5
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0
+  - name: Angry
+    clip: {fileID: 8300000, guid: 5cb03aef2555ee84f858add2d3e64024, type: 3}
+    mixer: {fileID: 24300002, guid: a4b735326df1c5f468912c14689ec53e, type: 2}
+    volume: 0.5
+    pitch: 1
+    source: {fileID: 0}
+    loop: 0

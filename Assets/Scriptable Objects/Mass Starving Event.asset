@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ac2efe4c3e32ff46907b2e9f0dccd4f, type: 3}
+  m_Script: {fileID: 11500000, guid: c7063ef40ee488f48ab6d4bab5b6b687, type: 3}
   m_Name: Mass Starving Event
   m_EditorClassIdentifier: 
   stringToBeAnnounced: Today will be a zombie apocalypse...
   timeBetweenNewcomerRange: {x: 0, y: 1}
   patientRange: {x: 4, y: 6}
-  spendingRange: {x: 30, y: 100}
+  spendingRange: {x: 15, y: 40}
   stayTimeRange: {x: 5, y: 20}
+  costPerSpacePerSecond: 1

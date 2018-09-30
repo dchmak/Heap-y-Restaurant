@@ -51,7 +51,6 @@ public class GameManager : MonoBehaviour {
     [Header("Capital")]
     [SerializeField] private int initialCapital = 0;
     [SerializeField] private TextMeshProUGUI capitalText = null;
-    [SerializeField] private int costPerSpacePerSecond = 0;
     [SerializeField] private int kickPenalty = 1;
 
     [Header("Rating")]
@@ -68,18 +67,20 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private CustomEvent[] events = null;
 
     [Header("Readonly")]
-    [SerializeField] [ReadOnly] private int borrowedSpace = 0;
+    [SerializeField] [ReadOnly] private int borrowedSpace;
     [SerializeField] [ReadOnly] private Vector3Int firstUnusablePosition;
-    [SerializeField] [ReadOnly] private float dayPassed = 0;
-    [SerializeField] [ReadOnly] private int capital = 0;
-    [SerializeField] [ReadOnly] private float star = 5;
-    [SerializeField] [ReadOnly] private bool isReallocing = false;
-    [SerializeField] [ReadOnly] private bool operational = true;
-    [SerializeField] [ReadOnly] private CustomEvent currentEvent = null;
-    [SerializeField] [ReadOnly] private Vector2 timeBetweenNewcomerRange = Vector2.zero;
-    [SerializeField] [ReadOnly] private Vector2 patientRange = Vector2.zero;
-    [SerializeField] [ReadOnly] private Vector2Int spendingRange = Vector2Int.zero;
-    [SerializeField] [ReadOnly] private Vector2 stayTimeRange = Vector2.zero;
+    [SerializeField] [ReadOnly] private float dayPassed;
+    [SerializeField] [ReadOnly] private int capital;
+    [SerializeField] [ReadOnly] private float star;
+    [SerializeField] [ReadOnly] private bool isReallocing;
+    [SerializeField] [ReadOnly] private bool operational;
+    [SerializeField] [ReadOnly] private bool started;
+    [SerializeField] [ReadOnly] private CustomEvent currentEvent;
+    [SerializeField] [ReadOnly] private Vector2 timeBetweenNewcomerRange;
+    [SerializeField] [ReadOnly] private Vector2 patientRange;
+    [SerializeField] [ReadOnly] private Vector2Int spendingRange;
+    [SerializeField] [ReadOnly] private Vector2 stayTimeRange;
+    [SerializeField] [ReadOnly] private int costPerSpacePerSecond = 0;
 
     #endregion
 
@@ -87,6 +88,7 @@ public class GameManager : MonoBehaviour {
 
     private List<Customer> queue = new List<Customer>();
     private Dictionary<Vector3Int, Customer> haveSpaceCustomers = new Dictionary<Vector3Int, Customer>();
+    private AudioManager audioManager;
 
     #endregion
 
@@ -103,8 +105,6 @@ public class GameManager : MonoBehaviour {
     }
 
     public void StartOfDay() {
-        StartCoroutine(ChargeSpaceCost());
-        StartCoroutine(RandomNewcomer());
         operational = true;
     }
 
@@ -113,45 +113,19 @@ public class GameManager : MonoBehaviour {
     #region Unity Callback Methods
 
     private void Start() {
-        StartCoroutine(ChargeSpaceCost());
-        StartCoroutine(RandomNewcomer());
-        annoucer.text = "Another Day to feed.\n" + currentEvent.stringToBeAnnounced;
-        annoucer.gameObject.SetActive(true);
-
-        star = 5;
+        audioManager = AudioManager.instance;
     }
 
     private void Update() {
         // Adjust camera size
         Camera.main.orthographicSize = tilemapHeight;
 
+        borrowedInput.interactable = operational;
+
         if (operational) {
-            Impatience();
-            VisualisePatient();
-            IncrementTimeHaveSpace();
-
-            // Assign space for customer
-            if (queue.Count > 0 && Input.GetMouseButtonDown(0)) {
-                Vector3Int position = ClickOnTile();
-                TileBase tileBase = tilemap.GetTile(position);
-
-                if (tileBase != null && tileBase.Equals(OccupiedSpace)) {
-                    star -= annoyingPenalty;
-                } else {
-                    AssignSpace(position);
-                }
-            }
-
-            // Increment time and update the clock
-            dayPassed += Time.deltaTime;
-            clockFill.fillAmount = dayPassed / dayLength;
-
-            //end of day
-            if (dayPassed >= dayLength) {
-                EndOfDay();
-            }
-        } 
-    }    
+            Operate();
+        }
+    }
 
     private void LateUpdate() {
         PrintCapital();
@@ -159,18 +133,21 @@ public class GameManager : MonoBehaviour {
 
         // Lose
         if (capital <= 0 || star <= 0) {
-            SceneManager.LoadScene(1);
+            audioManager.Stop();
+            audioManager.Play("Lose");
+            SceneManager.LoadScene(2);
         }
     }
 
     private void OnValidate() {
         borrowedSpace = 0;
         firstUnusablePosition = new Vector3Int(-tilemapHeight + 1, tilemapHeight - 2, 0);
-        dayPassed = 0;
+        dayPassed = dayLength;
         capital = 0;
         star = 5;
         isReallocing = false;
-        operational = false;
+        operational = true;
+        started = false;
 
         if (events != null && events.Length > 0) {
             currentEvent = events[0];
@@ -208,6 +185,7 @@ public class GameManager : MonoBehaviour {
         if (tileBase != null && tileBase.Equals(OccupiedSpace)) {
             Customer customerToBeKicked = haveSpaceCustomers[position];
             haveSpaceCustomers.Remove(position);
+            audioManager.Play("Angry");
             capital -= customerToBeKicked.spending * kickPenalty;
         }
 
@@ -251,6 +229,7 @@ public class GameManager : MonoBehaviour {
                 i++;
 
                 location = new Vector3Int(x, y, 0);
+                firstUnusablePosition = location;
             } else {
                 x--;
                 if (x <= -tilemapHeight) {
@@ -260,13 +239,13 @@ public class GameManager : MonoBehaviour {
                 i++;
 
                 location = new Vector3Int(x, y, 0);
+                firstUnusablePosition = location;
 
                 ReturnToHeap(location);
                 borrowedSpace--;
             }
         }
 
-        firstUnusablePosition = location;
         isReallocing = false;
     }
 
@@ -316,6 +295,7 @@ public class GameManager : MonoBehaviour {
             }
         }
         foreach (Customer customer in isLeaving) {
+            audioManager.Play("Angry");
             star -= impatientPenalty;
             queue.Remove(customer);
         }
@@ -332,6 +312,7 @@ public class GameManager : MonoBehaviour {
         }
         foreach (KeyValuePair<Vector3Int, Customer> kvp in isLeavingKvp) {
             capital += kvp.Value.spending;
+            audioManager.Play("Cash");
             star += successRating;
             tilemap.SetTile(kvp.Key, usableSpace);
             haveSpaceCustomers.Remove(kvp.Key);
@@ -354,11 +335,13 @@ public class GameManager : MonoBehaviour {
         patientRange = currentEvent.patientRange;
         spendingRange = currentEvent.spendingRange;
         stayTimeRange = currentEvent.stayTimeRange;
+        costPerSpacePerSecond = currentEvent.costPerSpacePerSecond;
     }
 
     private void EndOfDay() {
         StopAllCoroutines();
         operational = false;
+        started = false;
 
         foreach (KeyValuePair<Vector3Int, Customer> kvp in haveSpaceCustomers) {
             tilemap.SetTile(kvp.Key, usableSpace);
@@ -370,8 +353,7 @@ public class GameManager : MonoBehaviour {
         Free();
 
         // trigger event
-        //currentEvent = events[(int)(Random.value * events.Length)];
-        currentEvent = events[1];
+        currentEvent = events[(int)(Random.value * events.Length)];
         ApplyEvent();
 
         // announce
@@ -379,6 +361,40 @@ public class GameManager : MonoBehaviour {
         annoucer.gameObject.SetActive(true);
 
         dayPassed = 0;
+    }
+
+    private void Operate() {
+        if (!started) {
+            StartCoroutine(ChargeSpaceCost());
+            StartCoroutine(RandomNewcomer());
+            started = true;
+        }
+
+        Impatience();
+        VisualisePatient();
+        IncrementTimeHaveSpace();
+
+        // Assign space for customer
+        if (queue.Count > 0 && Input.GetMouseButtonDown(0)) {
+            Vector3Int position = ClickOnTile();
+            TileBase tileBase = tilemap.GetTile(position);
+
+            if (tileBase != null && tileBase.Equals(OccupiedSpace)) {
+                star -= annoyingPenalty;
+                audioManager.Play("Angry");
+            } else {
+                AssignSpace(position);
+            }
+        }
+
+        // Increment time and update the clock
+        dayPassed += Time.deltaTime;
+        clockFill.fillAmount = dayPassed / dayLength;
+
+        //end of day
+        if (dayPassed >= dayLength) {
+            EndOfDay();
+        }
     }
 
     #endregion
